@@ -1,5 +1,7 @@
 import KanbanBoard from "@/components/kanban-board";
+import Loading from "@/components/loading";
 import TeamTaskBoard from "@/components/team-task-board";
+import { Spinner } from "@/components/ui/spinner";
 import { getSession } from "@/lib/auth/auth"
 import connectDB from "@/lib/db";
 import { Board, TeamProject, TeamTask } from "@/lib/models";
@@ -43,7 +45,7 @@ async function TeamTaskPage(){
 }
 export default async function Team() {
   return (
-  <Suspense fallback={<p>Loading ...</p>}>
+  <Suspense fallback={<Loading/>}>
     <TeamTaskPage/>
   </Suspense>);
    

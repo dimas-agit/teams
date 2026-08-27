@@ -25,6 +25,8 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import ImageDropzone from "./image-drop-zone";
 import Checklist from "./checklist";
+import Loading from "./loading";
+import { Spinner } from "./ui/spinner";
 
 interface TeamTaskCardProps {
   task: TeamTask;
@@ -33,6 +35,7 @@ interface TeamTaskCardProps {
 
 export default function TeamTaskCard({ task, dragHandleProps }: TeamTaskCardProps) {
   const [isEditing, setIsEditing] = useState(false);
+   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: task.title,
     description: task.description || "",
@@ -45,6 +48,8 @@ export default function TeamTaskCard({ task, dragHandleProps }: TeamTaskCardProp
   async function handleUpdate(event: React.FormEvent) {
     event.preventDefault();
 
+    setLoading(true);
+
     const result = await updateTeamTask(task._id, {
       title: formData.title,
       description: formData.description,
@@ -56,11 +61,24 @@ export default function TeamTaskCard({ task, dragHandleProps }: TeamTaskCardProp
 
     if (!result.error) {
       setIsEditing(false);
+      setLoading(false);
+    
     }
   }
 
   async function handleDelete() {
-    await deleteTeamTask(task._id);
+    try{
+      setLoading(true);
+      await deleteTeamTask(task._id);
+
+    } catch(err){
+      console.log('Error')
+    } finally{
+      setLoading(false);
+    } 
+    
+    
+   
   }
 
   return (
@@ -132,12 +150,19 @@ export default function TeamTaskCard({ task, dragHandleProps }: TeamTaskCardProp
       </Card>
 
       <Dialog open={isEditing} onOpenChange={setIsEditing}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
+            {loading && (
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50">
+              <Spinner className="h-6 w-6" />
+            </div>
+          )}
           <DialogHeader>
             <DialogTitle>Edit Task</DialogTitle>
             <DialogDescription>Update this team task.</DialogDescription>
           </DialogHeader>
-          <form className="space-y-4" onSubmit={handleUpdate}>
+         
+
+          <form className="space-y-4 overflow-y-auto" onSubmit={handleUpdate}>
             <div className="space-y-2">
               <Label htmlFor={`title-${task._id}`}>Title *</Label>
               <Input

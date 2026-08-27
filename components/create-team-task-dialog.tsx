@@ -18,6 +18,7 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import ImageDropzone from "./image-drop-zone";
 import Checklist from "./checklist";
+import Loading from "./loading";
 
 interface CreateTeamTaskDialogProps {
   columnId: string;
@@ -43,11 +44,13 @@ export default function CreateTeamTaskDialog({
   projectId,
 }: CreateTeamTaskDialogProps) {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
+    setLoading(true);
     const result = await createTeamTask({
       ...formData,
       progress: Number(formData.progress),
@@ -56,8 +59,10 @@ export default function CreateTeamTaskDialog({
     });
 
     if (!result.error) {
+
       setFormData(INITIAL_FORM_DATA);
       setOpen(false);
+      setLoading(false);
     }
   }
 
@@ -71,11 +76,16 @@ export default function CreateTeamTaskDialog({
           </Button>
         }
       />
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Task</DialogTitle>
           <DialogDescription>Create a task for this board.</DialogDescription>
         </DialogHeader>
+        {
+          loading && (
+            <Loading/>
+          )
+        }
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="space-y-2">
             <Label htmlFor="task-title">Title *</Label>
