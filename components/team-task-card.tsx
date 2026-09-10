@@ -150,7 +150,12 @@ export default function TeamTaskCard({ task, dragHandleProps }: TeamTaskCardProp
       </Card>
 
       <Dialog open={isEditing} onOpenChange={setIsEditing}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
+        <DialogContent className="
+    w-[calc(100%-32px)]
+    max-w-2xl
+    max-h-[90vh]
+    overflow-y-auto
+  ">
             {loading && (
             <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50">
               <Spinner className="h-6 w-6" />
