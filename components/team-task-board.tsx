@@ -72,7 +72,14 @@ function DroppableColumn({
   const sortedTasks = [...(column.tasks || [])].sort((a, b) => a.order - b.order);
 
   return (
-    <Card className="min-w-[450px] shrink-0 p-0 shadow-md">
+    <Card className="w-[85vw]
+    max-w-[450px]
+    shrink-0
+    p-0
+    shadow-md
+    sm:w-[380px]
+    md:w-[420px]
+    lg:w-[450px]">
       <CardHeader className={`${config.color} rounded-t-lg pb-3 pt-3 text-white`}>
         <div className="flex items-center justify-between">
           <div className="flex min-w-0 items-center gap-2">
